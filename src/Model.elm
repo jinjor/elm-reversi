@@ -10,15 +10,17 @@ type alias ColIndex = Int
 
 
 type alias Model =
-  { cells : Array2D Cell
+  { host : String
+  , cells : Array2D Cell
   , selected : Maybe (RowIndex, ColIndex)
   , turn : Bool -- 1P: True, 2P: False
   }
 
 
-model : Model
-model =
-  { cells = initialCells
+model : String -> Model
+model host =
+  { host = host
+  , cells = initialCells
   , selected = Nothing
   , turn = True -- 1P: True, 2P: False
   }
@@ -75,13 +77,21 @@ putKoma rowIndex colIndex player rows =
         memo ++ putKomaHelp rows incrRow incrCol player (rowIndex + incrRow) (colIndex + incrCol) []
       ) [] directions
   in
-    if komasToBeGot == [] then
-      Nothing
-    else
-      Just <|
-      List.foldl (\(rowIndex, colIndex) rows ->
-        set rowIndex colIndex (Just player) rows
-      ) rows ((rowIndex, colIndex) :: komasToBeGot)
+    case get rowIndex colIndex rows of
+      Just Nothing ->
+        if komasToBeGot == [] then
+          Nothing
+        else
+          Just <|
+            List.foldl (\(rowIndex, colIndex) rows ->
+              set rowIndex colIndex (Just player) rows
+            ) rows ((rowIndex, colIndex) :: komasToBeGot)
+
+      Just _ ->
+        Nothing
+
+      Nothing ->
+        Nothing
 
 
 putKomaHelp : Array2D Cell -> Int -> Int -> Bool -> RowIndex -> ColIndex -> List (RowIndex, ColIndex) -> List (RowIndex, ColIndex)

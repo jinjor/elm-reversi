@@ -3,13 +3,15 @@ module Update exposing (..)
 
 import Array2D exposing (..)
 import Model exposing (..)
+import WS exposing (..)
 
 
-type Msg =
-  Click RowIndex ColIndex
+type Msg
+  = Click RowIndex ColIndex
+  | Receive WS.Msg
 
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
     Click rowIndex colIndex ->
@@ -18,6 +20,23 @@ update msg model =
           { model |
             cells = cells
           , turn = not model.turn
-          }
+          } ! [ sendPutKoma model.host model.turn rowIndex colIndex ]
+
         Nothing ->
-          model
+          model ! []
+
+    Receive (PutKoma player rowIndex colIndex) ->
+      case putKoma rowIndex colIndex player model.cells of
+        Just cells ->
+          { model |
+            cells = cells
+          , turn = not player
+          } ! []
+
+        Nothing ->
+          model ! []
+
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+  Sub.map Receive (listen model.host)
