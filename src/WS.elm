@@ -26,7 +26,7 @@ sendValue host =
 
 toMsg : String -> Msg
 toMsg s =
-  case D.decodeString (D.tuple3 PutKoma D.bool D.int D.int) s of
+  case D.decodeString (D.map3 PutKoma D.bool D.int D.int) s of
     Ok msg -> msg
     Err s -> Debug.crash s
 

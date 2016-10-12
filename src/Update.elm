@@ -7,13 +7,17 @@ import WS exposing (..)
 
 
 type Msg
-  = Click RowIndex ColIndex
+  = NoOp
+  | Click RowIndex ColIndex
   | Receive WS.Msg
 
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
+    NoOp ->
+      model ! []
+
     Click rowIndex colIndex ->
       case putKoma rowIndex colIndex (model.turn) model.cells of
         Just cells ->

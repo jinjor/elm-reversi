@@ -13,8 +13,8 @@ fill rowLength colLength data =
 
 get : Int -> Int -> Array2D a -> Maybe a
 get rowIndex colIndex rows =
-  Array.get rowIndex rows `andThen` \row ->
-  Array.get colIndex row
+  Array.get rowIndex rows |> andThen (\row ->
+  Array.get colIndex row)
 
 
 set : Int -> Int -> a -> Array2D a -> Array2D a

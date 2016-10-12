@@ -5,18 +5,12 @@ import View exposing (..)
 import WS exposing (..)
 
 
-main : Program Never
+main : Program Never Model Update.Msg
 main =
   program
-    parser
-    { init = \host -> model host ! []
+    (always NoOp)
+    { init = \location -> model location.host ! []
     , view = view
     , update = update
-    , urlUpdate = \_ model -> model ! []
     , subscriptions = subscriptions
     }
-
-
-parser : Parser String
-parser =
-  makeParser .hostname
