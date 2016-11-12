@@ -9,7 +9,7 @@ main : Program Never Model Update.Msg
 main =
   program
     (always NoOp)
-    { init = \location -> model location.host ! []
+    { init = \location -> model location.hostname ! []
     , view = view
     , update = update
     , subscriptions = subscriptions

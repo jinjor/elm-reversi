@@ -26,9 +26,17 @@ sendValue host =
 
 toMsg : String -> Msg
 toMsg s =
-  case D.decodeString (D.map3 PutKoma D.bool D.int D.int) s of
+  case D.decodeString decodeKoma s of
     Ok msg -> msg
     Err s -> Debug.crash s
+
+
+decodeKoma : D.Decoder Msg
+decodeKoma =
+  D.map3 PutKoma
+    (D.index 0 D.bool)
+    (D.index 1 D.int)
+    (D.index 2 D.int)
 
 
 sendPutKoma : String -> Bool -> Int -> Int -> Cmd msg
