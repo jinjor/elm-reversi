@@ -1,19 +1,19 @@
-var express = require('express');
-var ws = require('ws');
+const express = require('express');
+const ws = require('ws');
 
-var app = express();
+const app = express();
 
 app.use(express.static('docs'));
 
-app.listen(3000, function () {
+app.listen(3000, () => {
   console.log('Reversi server listening on port 3000!');
 });
 
-var WebSocketServer = ws.Server;
-var wss = new WebSocketServer({ port: 3001 });
-wss.on('connection', (ws) => {
+const WebSocketServer = ws.Server;
+const wss = new WebSocketServer({ port: 3001 });
+wss.on('connection', ws => {
   ws.on('message', (data, flags) => {
-    wss.clients.forEach((client) => {
+    wss.clients.forEach(client => {
       client.send(data);
     });
   });
